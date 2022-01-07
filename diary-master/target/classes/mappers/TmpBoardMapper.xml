@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TmpBoardMapper">
+   <!-- 게시판 글 작성 -->
+   <insert id = "insert">
+   		INSERT INTO tmp_board(	BNO, 
+   		                        TITLE,
+   		                        WRITE_DATE,
+   								CONTENT,    								
+   								FILEPATH,
+   								REGDATE,
+   								FONT,
+   								FONTSIZE,
+   								FONTCOLOR
+   							 )
+     				 VALUES (	#{bno},
+     				 			sysdate(),
+     				 			sysdate(),
+     				 			#{content},
+     				 			#{filepath},
+     				 			sysdate(),
+     				 			#{font},
+     				 			#{fontsize},
+     				 			#{fontcolor}
+     				 		)
+   </insert>
+   <!-- 왼쪽 게시글 목록 불러오기 페이징이 처리 할것 -->
+   <select id="list" resultType="com.myproject.board.vo.TmpBoardVO">
+   		SELECT  *		
+	  	FROM tmp_board
+	  	ORDER BY WRITE_DATE DESC	  	
+   </select>
+   <!--  왼쪽 게시글 본문으로 보내기 content -->
+   <select id="DetailList" resultType="com.myproject.board.vo.TmpBoardVO">
+   		SELECT  *		   
+	  	FROM tmp_board
+	  	WHERE bno = #{bno}
+   </select>
+   
+   <!--  가장 최근에 수정된 게시물을 가져온다-->
+   <select id="main" resultType="com.myproject.board.vo.TmpBoardVO">
+   		SELECT  *		   
+	  	FROM tmp_board
+	  	WHERE REGDATE=(SELECT MAX(REGDATE) FROM TMP_BOARD)
+   </select>
+   
+   <delete id="delete">
+   		DELETE FROM tmp_board WHERE bno = #{bno}
+   </delete>
+   
+</mapper>
